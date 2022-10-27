@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Login from '../components/Login.vue'
+import Login from '../Login.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -14,7 +14,7 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to, from) => {
-  console.log("to", to)
-  console.log("from ", from)
+  // console.log("to", to)
+  // console.log("from ", from)
 })
 export default router

@@ -44,14 +44,20 @@
       </label>
     </div>
     <div class="mb-2">寫入記憶體</div>
-    <SwitchBox ref="switchValue" />
+    <SwitchBox ref="switchRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import SwitchBox from "./SwitchBox.vue";
 import { defineProps, reactive, ref } from "vue";
-const switchValue = ref(false);
+interface switchBox {
+  fn: () => void;
+  count: number;
+}
+const switchRef = ref<InstanceType<typeof SwitchBox> & switchBox>();
+console.log(switchRef.value?.fn);
+console.log(switchRef.value?.count);
 defineProps({
   idx: Number,
   value: Number,
