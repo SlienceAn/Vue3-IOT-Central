@@ -17,6 +17,7 @@ export const useFetch = (url: string, config: config, headers = "") => {
         data: null
     }) as state
     const fetchData = async () => {
+        state.loading = true;
         await fetch(`http://localhost:3000/api_v2/${url}`,
             {
                 headers: {
@@ -27,8 +28,11 @@ export const useFetch = (url: string, config: config, headers = "") => {
             }
         )
             .then(type => type.json())
-            .then(res => state.data = res)
-            .catch(err => state.error = err)
+            .then(res => {
+                state.data = res
+                state.loading = false
+            })
+            .catch(err => state.error = true)
         return state
     }
     return fetchData;

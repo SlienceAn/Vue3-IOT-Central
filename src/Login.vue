@@ -5,16 +5,22 @@
     </h2>
     <div class="py-5">
       <div class="block-cube block-input mb-5">
-        <input type="text" class="form-input" placeholder="輸入帳號" />
-        <div class="bg-top">
-          <div class="bg-inner" />
-        </div>
-        <div class="bg-right">
-          <div class="bg-inner" />
-        </div>
+        <input
+          type="text"
+          class="form-input"
+          placeholder="輸入帳號"
+          v-model="User.UID"
+        />
+        <div class="bg-top" />
+        <div class="bg-right" />
       </div>
       <div class="block-cube block-input mb-5">
-        <input type="text" class="form-input" placeholder="輸入密碼" />
+        <input
+          type="password"
+          class="form-input"
+          placeholder="輸入密碼"
+          v-model="User.UPW"
+        />
         <div class="bg-top">
           <div class="bg-inner" />
         </div>
@@ -23,7 +29,7 @@
         </div>
       </div>
       <div class="block-cube block-input block-button mb-5">
-        <input type="button" value="登入" class="w-100" />
+        <input type="button" value="登入" class="w-100" @click="login" />
         <div class="bg-top">
           <div class="bg-inner" />
         </div>
@@ -36,11 +42,38 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
+import { useFetch } from "./hook/useFetch";
+import { useRouter } from "vue-router";
+import sha1 from "sha1";
+const router = useRouter();
 const User = reactive({
   UID: "",
   UPW: "",
 });
+onMounted(() => {
+  const check = useFetch("check", {
+    method: "POST",
+  });
+});
+const login = async () => {
+  if (User.UID === "" || User.UPW === "") {
+    alert("帳號密碼不得為空");
+    return;
+  }
+  const login = useFetch("login", {
+    method: "POST",
+    body: JSON.stringify({
+      UID: User.UID,
+      UPW: sha1(User.UPW),
+    }),
+  });
+  const { data, error, loading } = await login();
+  console.log("error", error);
+  console.log("loading", loading);
+  console.log("data", data[0]);
+  router.push("/MainPanel");
+};
 </script>
 
 <style lang="scss" scoped>
