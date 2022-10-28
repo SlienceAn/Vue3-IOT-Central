@@ -1,5 +1,8 @@
 <template>
-  <div>Main Panel</div>
+  <div class="sider">Main Panel</div>
+  <div class="">
+    <nav></nav>
+  </div>
 </template>
 
 <script lang="ts" setup>

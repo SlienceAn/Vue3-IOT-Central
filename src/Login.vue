@@ -10,6 +10,7 @@
           class="form-input"
           placeholder="輸入帳號"
           v-model="User.UID"
+          v-focus
         />
         <div class="bg-top" />
         <div class="bg-right" />
@@ -21,21 +22,13 @@
           placeholder="輸入密碼"
           v-model="User.UPW"
         />
-        <div class="bg-top">
-          <div class="bg-inner" />
-        </div>
-        <div class="bg-right">
-          <div class="bg-inner" />
-        </div>
+        <div class="bg-top" />
+        <div class="bg-right" />
       </div>
       <div class="block-cube block-input block-button mb-5">
         <input type="button" value="登入" class="w-100" @click="login" />
-        <div class="bg-top">
-          <div class="bg-inner" />
-        </div>
-        <div class="bg-right">
-          <div class="bg-inner" />
-        </div>
+        <div class="bg-top" />
+        <div class="bg-right" />
       </div>
     </div>
   </div>
@@ -68,11 +61,10 @@ const login = async () => {
       UPW: sha1(User.UPW),
     }),
   });
-  const { data, error, loading } = await login();
-  console.log("error", error);
-  console.log("loading", loading);
-  console.log("data", data[0]);
-  router.push("/MainPanel");
+  const { data, status } = await login();
+  if (status === 200) {
+    router.push("/MainPanel");
+  }
 };
 </script>
 

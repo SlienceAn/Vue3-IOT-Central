@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Login from '../Login.vue';
-import MainPanel from '../MainPanel.vue';
+import MainPanel from '../components/IotIndex/MainPanel.vue';
+import IotIndex from '../IotIndex.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -8,10 +9,23 @@ const routes: Array<RouteRecordRaw> = [
     component: Login
   },
   {
-    path: '/MainPanel',
-    name: 'MainPanel',
-    component: MainPanel
-  }
+    path: '/IotIndex',
+    name: 'IotIndex',
+    component: IotIndex,
+    children: [
+      {
+        path: '',
+        name: 'MainPanel',
+        component: MainPanel,
+      },
+      {
+        path: '/MainPanel',
+        name: 'MainPanel',
+        component: MainPanel,
+      }
+    ]
+  },
+
 ]
 
 const router = createRouter({

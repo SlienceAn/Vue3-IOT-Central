@@ -4,6 +4,7 @@ interface state {
     loading: boolean
     error: boolean
     data: any
+    status: number
 }
 interface config {
     method: string
@@ -14,6 +15,7 @@ export const useFetch = (url: string, config: config, headers = "") => {
     const state = reactive({
         loading: false,
         error: false,
+        status: 200,
         data: null
     }) as state
     const fetchData = async () => {
@@ -27,7 +29,10 @@ export const useFetch = (url: string, config: config, headers = "") => {
                 ...config
             }
         )
-            .then(type => type.json())
+            .then(type => {
+                state.status = type.status
+                type.json()
+            })
             .then(res => {
                 state.data = res
                 state.loading = false

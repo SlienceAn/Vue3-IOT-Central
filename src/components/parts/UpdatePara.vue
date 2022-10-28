@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive } from "vue";
-import { useFetch } from "../hook/useFetch";
+import { useFetch } from "../../hook/useFetch";
 import InputCube from "../components/InputCube.vue";
 let DataList = reactive({
   item: [],
