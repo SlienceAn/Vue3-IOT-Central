@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
+import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
+import VueCookies from 'vue-cookies'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 const app = createApp(App);
@@ -9,4 +11,18 @@ app.directive('focus', {
         el.focus()
     }
 })
-app.use(router).mount('#app')
+//Test Vuex
+const Store = createStore({
+    state: {
+        data: null
+    },
+    mutations: {
+        setData(state, payload) {
+            state.data = payload;
+        }
+    }
+})
+app.config.globalProperties.$cookies = VueCookies;
+app.use(Store)
+app.use(router)
+app.mount('#app')

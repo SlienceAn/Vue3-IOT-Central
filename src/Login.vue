@@ -35,19 +35,32 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, getCurrentInstance } from "vue";
+import { LoginInfo } from "./store";
 import { useFetch } from "./hook/useFetch";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import sha1 from "sha1";
 const router = useRouter();
+const store = useStore();
+const globalData = getCurrentInstance()?.appContext.config.globalProperties;
+const $cookies = globalData?.$cookies;
 const User = reactive({
   UID: "",
   UPW: "",
 });
-onMounted(() => {
-  const check = useFetch("check", {
-    method: "POST",
-  });
+onMounted(async () => {
+  const cookies = $cookies.get("JSESSIONID");
+  const check = useFetch(
+    "check",
+    {
+      method: "POST",
+    },
+    cookies
+  );
+  const { data, status } = await check();
+  console.log("check", data);
+  console.log("check", status);
 });
 const login = async () => {
   if (User.UID === "" || User.UPW === "") {
@@ -61,9 +74,15 @@ const login = async () => {
       UPW: sha1(User.UPW),
     }),
   });
-  const { data, status } = await login();
+  const { status, data } = await login();
   if (status === 200) {
+    const SessionID = data[0].SessionID;
+    const payload: LoginInfo = data[0];
+    $cookies.set("JSESSIONID", SessionID, "1y");
+    store.commit("setData", payload);
     router.push("/MainPanel");
+  } else {
+    alert("帳密輸入錯誤");
   }
 };
 </script>

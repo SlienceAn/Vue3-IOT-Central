@@ -15,12 +15,12 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        name: 'MainPanel',
+        name: 'Dashboard',
         component: MainPanel,
       },
       {
         path: '/MainPanel',
-        name: 'MainPanel',
+        name: 'Dashboard',
         component: MainPanel,
       }
     ]

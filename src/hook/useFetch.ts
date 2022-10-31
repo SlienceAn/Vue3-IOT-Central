@@ -10,7 +10,7 @@ interface config {
     method: string
     body?: string
 }
-
+const baseUrl: string = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://www.jsene.com/iotcentral'
 export const useFetch = (url: string, config: config, headers = "") => {
     const state = reactive({
         loading: false,
@@ -20,7 +20,7 @@ export const useFetch = (url: string, config: config, headers = "") => {
     }) as state
     const fetchData = async () => {
         state.loading = true;
-        await fetch(`http://localhost:3000/api_v2/${url}`,
+        await fetch(`${baseUrl}/api_v2/${url}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export const useFetch = (url: string, config: config, headers = "") => {
         )
             .then(type => {
                 state.status = type.status
-                type.json()
+                return type.json()
             })
             .then(res => {
                 state.data = res
