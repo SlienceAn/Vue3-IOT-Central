@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Login from '../Login.vue';
 import MainPanel from '../components/IotIndex/MainPanel.vue';
 import IotIndex from '../IotIndex.vue';
+import UpdateParams from '../components/IotIndex/UpdateParams.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -12,16 +13,24 @@ const routes: Array<RouteRecordRaw> = [
     path: '/IotIndex',
     name: 'IotIndex',
     component: IotIndex,
+    props: true,
     children: [
       {
         path: '',
         name: 'Dashboard',
         component: MainPanel,
+        props: true
       },
       {
         path: '/MainPanel',
         name: 'Dashboard',
         component: MainPanel,
+        props: true
+      },
+      {
+        path: '/UpdateParams',
+        name: '更新參數設定',
+        component: UpdateParams
       }
     ]
   },

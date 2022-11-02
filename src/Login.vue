@@ -46,8 +46,8 @@ const store = useStore();
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const User = reactive({
-  UID: "",
-  UPW: "",
+  UID: process.env.NODE_ENV === "development" ? "test" : "",
+  UPW: process.env.NODE_ENV === "development" ? "123" : "",
 });
 onMounted(async () => {
   const cookies = $cookies.get("JSESSIONID");
