@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-3 py-4">
+  <div class="col-md-4 py-4">
     <span class="text-danger">
       <strong>{{ param }} | {{ unit }}</strong>
     </span>
@@ -51,13 +51,8 @@
 <script lang="ts" setup>
 import SwitchBox from "./SwitchBox.vue";
 import { defineProps, reactive, ref } from "vue";
-interface switchBox {
-  fn: () => void;
-  count: number;
-}
-const switchRef = ref<InstanceType<typeof SwitchBox> & switchBox>();
-console.log(switchRef.value?.fn);
-console.log(switchRef.value?.count);
+const switchRef = ref();
+console.log(switchRef.value?.isSwitch);
 defineProps({
   idx: Number,
   value: Number,

@@ -14,11 +14,15 @@ app.directive('focus', {
 //Test Vuex
 const Store = createStore({
     state: {
-        data: null
+        data: null,
+        projectCode: []
     },
     mutations: {
         setData(state, payload) {
             state.data = payload;
+        },
+        setProjectCode(state, payload) {
+            state.projectCode = payload
         }
     }
 })

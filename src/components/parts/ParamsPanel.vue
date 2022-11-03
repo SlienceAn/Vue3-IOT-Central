@@ -1,5 +1,6 @@
 <template>
-  <div class="row m-0">
+  <slot name="buttonList" />
+  <div id="ZeroSpanParams" class="row m-0 p-0 collapse">
     <input-cube
       v-for="col in DataList.item.length / 2"
       :key="col"
@@ -11,13 +12,18 @@
       :modifyData="modifyData"
     />
   </div>
-  <button class="btn btn-success" @click="submitData">送出</button>
+  <div id="WifiSetting" class="collapse">Wifi設定</div>
+  <div id="BigSetting" class="collapse">重要設定</div>
+  <slot name="submit" />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from "vue";
+import { reactive, defineProps, getCurrentInstance, defineExpose } from "vue";
 import { useFetch } from "../../hook/useFetch";
 import InputCube from "./InputCube.vue";
+const globalData = getCurrentInstance()?.appContext.config.globalProperties;
+const $cookies = globalData?.$cookies;
+const cookies = $cookies.get("JSESSIONID");
 let DataList = reactive({
   item: [],
   value: [],
@@ -27,24 +33,20 @@ let postData = reactive({
   Upcount: {},
   Written: {},
 }) as any;
-onMounted(async () => {
-  const login = useFetch("login", {
-    method: "POST",
-    body: JSON.stringify({
-      UID: "test",
-      UPW: "40BD001563085FC35165329EA1FF5C5ECBDBBEEF",
-    }),
-  });
-  const { data } = await login();
+const props = defineProps({
+  pjid: String,
+  stid: String,
+});
+const queryValue = () => {
   const getValue = useFetch(
-    "sensor/value/8001085/108023",
+    `sensor/value/${props.stid}/${props.pjid}`,
     { method: "GET" },
-    data[0]["SessionID"]
+    cookies
   );
   const getItem = useFetch(
-    "sensor/item/8001085",
+    `sensor/item/${props.stid}`,
     { method: "GET" },
-    data[0]["SessionID"]
+    cookies
   );
   Promise.all([getItem(), getValue()]).then((res) => {
     DataList.item = res[0]["data"];
@@ -57,13 +59,14 @@ onMounted(async () => {
       postData["Written"][`Ch0${i}Written`] = false;
     }
   });
-});
+};
 const modifyData = (cate: string, item: string, value: any) => {
   postData[cate][item] = value;
 };
-const submitData = () => {
-  console.log(postData);
-};
+defineExpose({
+  queryValue,
+  postData
+});
 </script>
 
 

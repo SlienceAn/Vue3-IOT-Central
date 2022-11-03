@@ -9,7 +9,7 @@
           <li class="list-group-item d-flex justify-content-between py-3">
             <i class="material-icons">account_circle</i>
             <span>早安</span>
-            <span>{{ store.state.data["Name"] }}</span>
+            <span>{{ state.data["Name"] }}</span>
             <i class="material-icons" @click="navigate">input</i>
           </li>
         </router-link>
@@ -28,13 +28,32 @@
             <span>{{ R.text }}</span>
           </li>
         </router-link>
+        <li class="list-group-item d-flex align-items-center gap-4 router-li">
+          <i class="material-icons">compare</i>
+          <span>比對系統(另開新頁)</span>
+        </li>
       </ul>
+      <div class="py-4 px-2 d-flex align-items-center justify-content-between">
+        <span class="text-danger text-time">更新時間:2020-06-15</span>
+        <button class="btn btn-info-dark text-white">更新詳情</button>
+      </div>
     </div>
     <div class="content">
       <nav class="navbar navbar-light mb-4">
-        <strong>
-          <h4>{{ route.name }}</h4>
-        </strong>
+        <div class="d-flex gap-2 align-items-center">
+          <button
+            class="btn btn-info-dark text-white d-flex py-1 px-2"
+            @click="open"
+          >
+            <i v-if="isOpen" class="material-icons"
+              >keyboard_double_arrow_left
+            </i>
+            <i v-else class="material-icons"> keyboard_double_arrow_right </i>
+          </button>
+          <strong style="font-size: 25px">
+            {{ route.name }}
+          </strong>
+        </div>
         <div class="dropdown" v-if="route.name === 'Dashboard'">
           <button
             class="btn btn-secondary dropdown-toggle"
@@ -46,7 +65,7 @@
           </button>
           <ul class="dropdown-menu end-0" id="dropButton">
             <li
-              v-for="code in projectCode"
+              v-for="code in state.projectCode"
               :key="code.id"
               class="dropdown-item"
               @click="setCode(code.id)"
@@ -66,39 +85,42 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { routeData, routeDataAnotherFeatures } from "./store";
-interface Code {
-  name: string;
-  id: string;
-}
-const store = useStore();
+import { routeData } from "./store";
+const { state } = useStore();
 const route = useRoute();
-const projectCode = reactive<Code[]>([]);
 const currentCode = ref("");
+const isOpen = ref(true);
+const width = ref("calc(100% - 260px)");
+const sidebarWidth = ref("260px");
 onMounted(() => {
-  for (const i in store.state.data["ProjectPermissions"].split(",")) {
-    projectCode.push({
-      name: store.state.data["ProjectName"].split(",")[i],
-      id: store.state.data["ProjectPermissions"].split(",")[i],
-    });
-  }
-  setCode(projectCode[0].id); //預設值
+  setCode(state.projectCode[0].id); //Pjid預設值
 });
 const setCode = (code: string) => {
   currentCode.value = code;
+};
+const open = () => {
+  isOpen.value = !isOpen.value;
+  isOpen.value === true
+    ? (width.value = "calc(100% - 260px)")
+    : (width.value = "100%");
+  isOpen.value === true
+    ? (sidebarWidth.value = "260px")
+    : (sidebarWidth.value = "0px");
 };
 </script>
 
 <style lang="scss" scoped>
 .sidebar {
-  width: 260px;
+  width: v-bind(sidebarWidth);
   background-color: #fff;
+  transition: all .5s;
 }
 .content {
-  width: calc(100% - 260px);
+  width: v-bind(width);
+  transition: all .5s;
 }
 .list-group-item:first-child {
   border-radius: 0;
@@ -122,5 +144,9 @@ nav {
 }
 ul {
   left: auto !important;
+}
+.text-time {
+  font-size: 12px;
+  font-weight: bolder;
 }
 </style>

@@ -1,17 +1,19 @@
 <template>
   <label class="switch">
-    <!-- <input type="checkbox" v-model="isCheck" @click="checked" /> -->
+    <input type="checkbox" v-model="isCheck" @click="toggle" />
     <span class="slider" />
   </label>
 </template>
 
 <script lang="ts" setup>
 import { defineExpose, ref } from "vue";
-const count = 0;
-const fn = () => {
-  console.log("子組件方法");
+const isCheck = ref(false);
+const isSwitch = ref();
+const toggle = () => {
+  isCheck.value = !isCheck.value;
+  isSwitch.value = isCheck;
 };
-defineExpose({ fn, count });
+defineExpose({ isSwitch });
 </script>
 
 <style scoped>

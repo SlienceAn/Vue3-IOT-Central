@@ -41,6 +41,10 @@ import { useFetch } from "./hook/useFetch";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import sha1 from "sha1";
+interface Code {
+  name: string;
+  id: string;
+}
 const router = useRouter();
 const store = useStore();
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
@@ -49,6 +53,7 @@ const User = reactive({
   UID: process.env.NODE_ENV === "development" ? "test" : "",
   UPW: process.env.NODE_ENV === "development" ? "123" : "",
 });
+const projectCode = reactive<Code[]>([]);
 onMounted(async () => {
   const cookies = $cookies.get("JSESSIONID");
   const check = useFetch(
@@ -59,8 +64,7 @@ onMounted(async () => {
     cookies
   );
   const { data, status } = await check();
-  console.log("check", data);
-  console.log("check", status);
+  if (status !== 200) console.log("請重新登入");
 });
 const login = async () => {
   if (User.UID === "" || User.UPW === "") {
@@ -78,8 +82,15 @@ const login = async () => {
   if (status === 200) {
     const SessionID = data[0].SessionID;
     const payload: LoginInfo = data[0];
+    for (const i in payload["ProjectPermissions"].split(",")) {
+      projectCode.push({
+        name: payload["ProjectName"].split(",")[i],
+        id: payload["ProjectPermissions"].split(",")[i],
+      });
+    }
     $cookies.set("JSESSIONID", SessionID, "1y");
     store.commit("setData", payload);
+    store.commit("setProjectCode", projectCode);
     router.push("/MainPanel");
   } else {
     alert("帳密輸入錯誤");
