@@ -1,3 +1,44 @@
+import { createStore, Store } from 'vuex'
+import { InjectionKey } from 'vue'
+import VuexPersist from 'vuex-persist'
+interface Code {
+    name: string,
+    id: string
+}
+interface LoginInfo {
+    Is_del?: boolean
+    ModifyPermissions?: number
+    Name?: string
+    ProjectName?: string
+    ProjectPermissions?: string
+    SessionID?: string
+    Type?: string
+}
+interface State {
+    data: LoginInfo | null
+    projectCode: Array<Code>
+}
+//Fuck..bug
+export const key: InjectionKey<Store<State>> = Symbol();
+
+export const store = createStore<State>({
+    state: {
+        data: null,
+        projectCode: []
+    },
+    mutations: {
+        setData(state, payload) {
+            state.data = payload;
+        },
+        setProjectCode(state, payload) {
+            state.projectCode = payload
+        }
+    },
+    plugins: [new VuexPersist({
+        storage: window.localStorage
+    }).plugin]
+})
+
 interface routeData {
     urls: string
     i: string
@@ -12,16 +53,6 @@ export const routeData: routeData[] = [
     { urls: "/MaintainImgDownload", i: "file_download", text: "下載巡檢維護照片" },
     { urls: "/ReportExcel", i: "content_paste_search", text: "查詢巡檢表報表" },
 ]
-
-export interface LoginInfo {
-    Is_del: boolean
-    ModifyPermissions: number
-    Name: string
-    ProjectName: string
-    ProjectPermissions: string
-    SessionID: string
-    Type: string
-}
 
 export const minorData = [
     {

@@ -1,19 +1,19 @@
 <template>
   <label class="switch">
-    <input type="checkbox" v-model="isCheck" @click="toggle" />
+    <input
+      type="checkbox"
+      :checked="checked"
+      @input="$emit('update:checked', $event.target.checked)"
+    />
     <span class="slider" />
   </label>
 </template>
 
 <script lang="ts" setup>
-import { defineExpose, ref } from "vue";
-const isCheck = ref(false);
-const isSwitch = ref();
-const toggle = () => {
-  isCheck.value = !isCheck.value;
-  isSwitch.value = isCheck;
-};
-defineExpose({ isSwitch });
+import { defineProps } from "vue";
+defineProps({
+  checked: Boolean,
+});
 </script>
 
 <style scoped>

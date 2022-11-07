@@ -1,10 +1,10 @@
 <template>
   <div class="row m-0">
     <div class="sidebar p-0">
-      <div class="p-4">
+      <div v-if="isOpen" class="p-4">
         <strong> JSENE 捷思微感資訊中心</strong>
       </div>
-      <ul class="list-group p-0 m-0">
+      <ul v-if="isOpen" class="list-group p-0 m-0">
         <router-link to="/" custom v-slot="{ navigate }">
           <li class="list-group-item d-flex justify-content-between py-3">
             <i class="material-icons">account_circle</i>
@@ -33,12 +33,15 @@
           <span>比對系統(另開新頁)</span>
         </li>
       </ul>
-      <div class="py-4 px-2 d-flex align-items-center justify-content-between">
+      <div
+        v-if="isOpen"
+        class="py-4 px-2 d-flex align-items-center justify-content-between"
+      >
         <span class="text-danger text-time">更新時間:2020-06-15</span>
         <button class="btn btn-info-dark text-white">更新詳情</button>
       </div>
     </div>
-    <div class="content">
+    <div id="content" class="content">
       <nav class="navbar navbar-light mb-4">
         <div class="d-flex gap-2 align-items-center">
           <button
@@ -116,11 +119,12 @@ const open = () => {
 .sidebar {
   width: v-bind(sidebarWidth);
   background-color: #fff;
-  transition: all .5s;
+  transition: all 0.5s;
 }
 .content {
   width: v-bind(width);
-  transition: all .5s;
+  transition: all 0.5s;
+  position: relative;
 }
 .list-group-item:first-child {
   border-radius: 0;

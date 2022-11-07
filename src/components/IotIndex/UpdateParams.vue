@@ -5,14 +5,18 @@
         <div class="mb-2"><strong>Project ID</strong></div>
         <select class="form-control" v-model="inputData.ProjectID">
           <option disabled selected>請選擇專案代碼</option>
-          <option v-for="pj in state.projectCode" :key="pj.id">
+          <option v-for="pj in state.projectCode" :key="pj.id" :value="pj.id">
             {{ pj.id }} {{ pj.name }}
           </option>
         </select>
       </label>
       <label class="col-md-2 col-sm-12">
         <div class="mb-2"><strong>STID</strong></div>
-        <input class="form-control" v-model="inputData.STID" placeholder="請輸入STID"/>
+        <input
+          class="form-control"
+          v-model="inputData.STID"
+          placeholder="請輸入STID"
+        />
       </label>
       <div id="buttonBox" class="col-md-8">
         <div class="mb-2">
@@ -55,9 +59,9 @@
       :stid="inputData.STID"
     >
       <template v-slot:buttonList>
-        <div id="buttonList" class="row py-2 gap-2 w-75">
+        <div id="buttonList" class="row py-4 gap-2 w-75">
           <button
-            v-for="B in buttonList"
+            v-for="B in buttonList[0]"
             :key="B.text"
             class="btn btn-primary w-auto col-sm-12"
             type="button"
@@ -69,10 +73,14 @@
         </div>
       </template>
       <template v-slot:submit>
-        <div>
+        <div class="submit d-flex gap-4 mt-4">
           <button class="btn btn-info-dark text-white" @click="submit">
             送出
           </button>
+          <div>
+            <div class="mb-2">送出後保留Value欄位</div>
+            <SwitchBox />
+          </div>
         </div>
       </template>
     </ParamsPanel>
@@ -82,40 +90,25 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import ParamsPanel from "../parts/ParamsPanel.vue";
+import SwitchBox from "../parts/SwitchBox.vue";
 import { useStore } from "vuex";
+import { usePermission } from "../../hook/usePermission";
 const { state } = useStore();
+const { buttonList } = usePermission(state.data["ModifyPermissions"]);
 const paramsPanel = ref();
 const inputData = reactive({
   ProjectID: "請選擇專案代碼",
   STID: "",
 });
-const buttonList = reactive([
-  { id: "#ZeroSpanParams", text: "Zero Span參數" },
-  {
-    id: "#WifiSetting",
-    text: "Wifi設定",
-  },
-  {
-    id: "#BigSetting",
-    text: "重要設定",
-  },
-  {
-    id: "#InfoSetting",
-    text: "站台資訊設定",
-  },
-  {
-    id: "#ModelType",
-    text: "ModelType變更",
-  },
-]);
 const queryValue = () => paramsPanel.value?.queryValue();
 const submit = () => {
-  console.log(paramsPanel.value?.postData);
+  console.log(paramsPanel.value?.IotData);
 };
 </script>
 
 <style lang="scss" scoped>
-#buttonList {
+#buttonList,
+.submit {
   margin-left: calc(var(--bs-gutter-x) * 0.5);
   margin-right: calc(var(--bs-gutter-x) * 0.5);
 }

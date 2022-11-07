@@ -11,7 +11,7 @@
         <input
           class="form-control"
           v-model="colData.valueZero"
-          @blur="modifyData('Upvalue', `Ch0${idx - 1}Zero`, colData.valueZero)"
+          @blur="modifyData('Value', `Ch0${idx - 1}Zero`, colData.valueZero)"
         />
       </label>
       <label class="col-md-4 pl">
@@ -19,7 +19,7 @@
         <input
           class="form-control"
           v-model="colData.valueSpan"
-          @blur="modifyData('Upvalue', `Ch0${idx - 1}Span`, colData.valueSpan)"
+          @blur="modifyData('Value', `Ch0${idx - 1}Span`, colData.valueSpan)"
         />
       </label>
     </div>
@@ -31,7 +31,7 @@
         <input
           class="form-control"
           v-model="colData.countZero"
-          @blur="modifyData('Upcount', `Ch0${idx - 1}Zero`, colData.countZero)"
+          @blur="modifyData('Count', `Ch0${idx - 1}Zero`, colData.countZero)"
         />
       </label>
       <label class="col-md-4 pl">
@@ -39,20 +39,17 @@
         <input
           class="form-control"
           v-model="colData.countSpan"
-          @blur="modifyData('Upcount', `Ch0${idx - 1}Span`, colData.countSpan)"
+          @blur="modifyData('Count', `Ch0${idx - 1}Span`, colData.countSpan)"
         />
       </label>
     </div>
     <div class="mb-2">寫入記憶體</div>
-    <SwitchBox ref="switchRef" />
+    <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
-import SwitchBox from "./SwitchBox.vue";
-import { defineProps, reactive, ref } from "vue";
-const switchRef = ref();
-console.log(switchRef.value?.isSwitch);
+import { defineProps, reactive } from "vue";
 defineProps({
   idx: Number,
   value: Number,
