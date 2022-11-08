@@ -15,5 +15,10 @@ $main-bg: #f0f0f0;
 .btn-info-dark {
   background-color: #138496 !important;
   border-color: #117a8b !important;
+
+  &:hover {
+    background-color: #0b5e6b !important;
+    border-color: #0b5e6b !important;
+  }
 }
 </style>

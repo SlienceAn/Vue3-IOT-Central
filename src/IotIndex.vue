@@ -44,10 +44,7 @@
     <div id="content" class="content">
       <nav class="navbar navbar-light mb-4">
         <div class="d-flex gap-2 align-items-center">
-          <button
-            class="btn btn-info-dark text-white d-flex py-1 px-2"
-            @click="open"
-          >
+          <button class="btn d-flex py-1 px-1" @click="open">
             <i v-if="isOpen" class="material-icons"
               >keyboard_double_arrow_left
             </i>

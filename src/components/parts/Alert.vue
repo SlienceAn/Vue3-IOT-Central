@@ -2,7 +2,9 @@
   <teleport to="body">
     <div :class="`alert ${color} d-flex align-items-cente gap-2`" role="alert">
       <i class="material-icons" style="font-size: 25px">{{ i }}</i>
-      <div>{{ text }}</div>
+      <div>
+        <strong>{{ text }}</strong>
+      </div>
     </div>
   </teleport>
 </template>

@@ -93,6 +93,7 @@ import ParamsPanel from "../parts/ParamsPanel.vue";
 import SwitchBox from "../parts/SwitchBox.vue";
 import { useStore } from "vuex";
 import { usePermission } from "../../hook/usePermission";
+import { useFetch } from "../../hook/useFetch";
 const { state } = useStore();
 const { buttonList } = usePermission(state.data["ModifyPermissions"]);
 const paramsPanel = ref();

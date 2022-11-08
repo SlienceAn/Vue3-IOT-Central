@@ -1,15 +1,19 @@
 <template>
-  <div class="w-100 d-flex">
-    <Datepicker v-model="value" @change="dateee" />
+  <div :class="dateClass">
+    <Datepicker v-model="date" :placeholder="placeholder"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-const value = ref("2022");
-const dateee = () => {
-  console.log(value.value);
-};
+import { ref, defineProps, defineExpose } from "vue";
+const props = defineProps({
+  dateClass: String,
+  placeholder: String,
+});
+const date = ref();
+defineExpose({
+  date,
+});
 </script>
 
 <style lang="scss" scoped>

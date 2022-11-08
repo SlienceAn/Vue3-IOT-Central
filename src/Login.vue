@@ -36,7 +36,6 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted, getCurrentInstance } from "vue";
-import { LoginInfo } from "./store";
 import { useFetch } from "./hook/useFetch";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -81,7 +80,7 @@ const login = async () => {
   const { status, data } = await login();
   if (status === 200) {
     const SessionID = data[0].SessionID;
-    const payload: LoginInfo = data[0];
+    const payload = data[0];
     for (const i in payload["ProjectPermissions"].split(",")) {
       projectCode.push({
         name: payload["ProjectName"].split(",")[i],

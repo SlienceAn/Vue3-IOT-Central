@@ -79,10 +79,11 @@ import {
   defineExpose,
   watch,
 } from "vue";
-import { useFetch } from "../../hook/useFetch";
+import { useFetch } from "@/hook/useFetch";
 import InputCube from "./InputCube.vue";
 import SwitchBox from "./SwitchBox.vue";
 import Alert from "./Alert.vue";
+import { useCheckID } from "@/hook/useCheckID";
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const cookies = $cookies.get("JSESSIONID");
@@ -122,42 +123,57 @@ watch(alertData, (news) => {
     setTimeout(() => (alertData.isShow = false), 3000);
   }
 });
-const queryValue = () => {
+const inspectQuery = () => {
   const { pjid, stid } = props;
+  let isPass = false;
   if (!pjid || !stid) {
     alertData.isShow = true;
     alertData.color = "alert-danger";
     alertData.i = "warning";
     alertData.text = "STID、Project ID不得為空";
-    return;
-  }
-  const getValue = useFetch(
-    `sensor/value/${props.stid}/${props.pjid}`,
-    { method: "GET" },
-    cookies
-  );
-  const getItem = useFetch(
-    `sensor/item/${props.stid}`,
-    { method: "GET" },
-    cookies
-  );
-  Promise.all([getItem(), getValue()])
-    .then((res) => {
-      DataList.item = res[0]["data"];
-      DataList.value = res[1]["data"];
-      for (let i = 0; i < DataList.item.length / 2; i++) {
-        IotData.Config.Value[`Ch0${i}Zero`] = "";
-        IotData.Config.Value[`Ch0${i}Span`] = "";
-        IotData.Config.Count[`Ch0${i}Zero`] = "";
-        IotData.Config.Count[`Ch0${i}Span`] = "";
-        IotData.Config.Written[`Ch0${i}Written`] = false;
-      }
+  } else {
+    const { result, warnStr } = useCheckID(pjid,stid);
+    if (result === false) {
       alertData.isShow = true;
-      alertData.color = "alert-success";
-      alertData.i = "task_alt";
-      alertData.text = "查詢成功";
-    })
-    .catch((err) => console.log(err));
+      alertData.color = "alert-warning";
+      alertData.i = "gpp_bad";
+      alertData.text = `${pjid}的STID開頭必須為${warnStr} !!`;
+    } else {
+      isPass = true;
+    }
+  }
+  return isPass;
+};
+const queryValue = () => {
+  if (inspectQuery()) {
+    const getValue = useFetch(
+      `sensor/value/${props.stid}/${props.pjid}`,
+      { method: "GET" },
+      cookies
+    );
+    const getItem = useFetch(
+      `sensor/item/${props.stid}`,
+      { method: "GET" },
+      cookies
+    );
+    Promise.all([getItem(), getValue()])
+      .then((res) => {
+        DataList.item = res[0]["data"];
+        DataList.value = res[1]["data"];
+        for (let i = 0; i < DataList.item.length / 2; i++) {
+          IotData.Config.Value[`Ch0${i}Zero`] = "";
+          IotData.Config.Value[`Ch0${i}Span`] = "";
+          IotData.Config.Count[`Ch0${i}Zero`] = "";
+          IotData.Config.Count[`Ch0${i}Span`] = "";
+          IotData.Config.Written[`Ch0${i}Written`] = false;
+        }
+        alertData.isShow = true;
+        alertData.color = "alert-success";
+        alertData.i = "task_alt";
+        alertData.text = "STID查詢成功";
+      })
+      .catch((err) => console.log(err));
+  }
 };
 const modifyData = (cate: string, item: string, value: any) => {
   IotData.Config[cate][item] = value;
