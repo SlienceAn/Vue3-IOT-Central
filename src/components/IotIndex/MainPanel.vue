@@ -105,6 +105,7 @@ const props = defineProps({
   pjid: String,
 });
 onMounted(() => {
+  console.log("$cookies", $cookies);
   if (cookies === "") router.push("/");
 });
 watch(

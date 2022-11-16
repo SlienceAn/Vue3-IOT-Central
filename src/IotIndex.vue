@@ -76,16 +76,18 @@
         </div>
       </nav>
       <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" :pjid="currentCode" />
-        </keep-alive>
+        <Transition name="slide-fade">
+          <keep-alive>
+            <component :is="Component" :pjid="currentCode" />
+          </keep-alive>
+        </Transition>
       </router-view>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, Transition } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { routeData } from "./store";
@@ -149,5 +151,18 @@ ul {
 .text-time {
   font-size: 12px;
   font-weight: bolder;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

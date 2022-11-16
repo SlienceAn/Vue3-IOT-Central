@@ -63,12 +63,6 @@
     </label>
   </div>
   <slot name="submit" />
-  <Alert
-    v-if="alertData.isShow"
-    :text="alertData.text"
-    :i="alertData.i"
-    :color="alertData.color"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -78,15 +72,15 @@ import {
   getCurrentInstance,
   defineExpose,
   watch,
+  inject,
 } from "vue";
 import { useFetch } from "@/hook/useFetch";
 import InputCube from "./InputCube.vue";
 import SwitchBox from "./SwitchBox.vue";
-import Alert from "./Alert.vue";
-import { useCheckID } from "@/hook/useCheckID";
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const cookies = $cookies.get("JSESSIONID");
+const IQ = inject("inspectQuery") as any;
 const props = defineProps({
   pjid: String,
   stid: String,
@@ -111,41 +105,8 @@ const IotData = reactive({
     Written: {},
   },
 }) as any;
-const alertData = reactive({
-  isShow: false,
-  i: "",
-  text: "",
-  color: "",
-});
-
-watch(alertData, (news) => {
-  if (news.isShow) {
-    setTimeout(() => (alertData.isShow = false), 3000);
-  }
-});
-const inspectQuery = () => {
-  const { pjid, stid } = props;
-  let isPass = false;
-  if (!pjid || !stid) {
-    alertData.isShow = true;
-    alertData.color = "alert-danger";
-    alertData.i = "warning";
-    alertData.text = "STID、Project ID不得為空";
-  } else {
-    const { result, warnStr } = useCheckID(pjid,stid);
-    if (result === false) {
-      alertData.isShow = true;
-      alertData.color = "alert-warning";
-      alertData.i = "gpp_bad";
-      alertData.text = `${pjid}的STID開頭必須為${warnStr} !!`;
-    } else {
-      isPass = true;
-    }
-  }
-  return isPass;
-};
 const queryValue = () => {
-  if (inspectQuery()) {
+  if (IQ().isPass) {
     const getValue = useFetch(
       `sensor/value/${props.stid}/${props.pjid}`,
       { method: "GET" },
@@ -158,19 +119,17 @@ const queryValue = () => {
     );
     Promise.all([getItem(), getValue()])
       .then((res) => {
-        DataList.item = res[0]["data"];
-        DataList.value = res[1]["data"];
-        for (let i = 0; i < DataList.item.length / 2; i++) {
-          IotData.Config.Value[`Ch0${i}Zero`] = "";
-          IotData.Config.Value[`Ch0${i}Span`] = "";
-          IotData.Config.Count[`Ch0${i}Zero`] = "";
-          IotData.Config.Count[`Ch0${i}Span`] = "";
-          IotData.Config.Written[`Ch0${i}Written`] = false;
+        if (Array.isArray(res)) {
+          DataList.item = res[0]["data"];
+          DataList.value = res[1]["data"];
+          for (let i = 0; i < DataList.item.length / 2; i++) {
+            IotData.Config.Value[`Ch0${i}Zero`] = "";
+            IotData.Config.Value[`Ch0${i}Span`] = "";
+            IotData.Config.Count[`Ch0${i}Zero`] = "";
+            IotData.Config.Count[`Ch0${i}Span`] = "";
+            IotData.Config.Written[`Ch0${i}Written`] = false;
+          }
         }
-        alertData.isShow = true;
-        alertData.color = "alert-success";
-        alertData.i = "task_alt";
-        alertData.text = "STID查詢成功";
       })
       .catch((err) => console.log(err));
   }

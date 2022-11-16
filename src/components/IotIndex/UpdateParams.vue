@@ -35,16 +35,7 @@
           >
             查詢最新測值
           </button>
-          <button
-            class="
-              col-md-12 col-lg-3 col-sm-12
-              btn btn-info-dark
-              text-white
-              px-4
-            "
-          >
-            顯示前六次設定紀錄
-          </button>
+          <SettingRecord :pjid="inputData.ProjectID" :stid="inputData.STID" />
           <button
             class="col-lg-5 col-md-12 col-sm-12 btn btn-danger text-white px-4"
           >
@@ -65,7 +56,7 @@
             :key="B.text"
             class="btn btn-primary w-auto col-sm-12"
             type="button"
-            data-bs-toggle="collapse"
+            :data-bs-toggle="B.toggle"
             :data-bs-target="B.id"
           >
             {{ B.text }}
@@ -79,32 +70,73 @@
           </button>
           <div>
             <div class="mb-2">送出後保留Value欄位</div>
-            <SwitchBox />
+            <SwitchBox v-model:checked="saveValue" />
           </div>
         </div>
       </template>
     </ParamsPanel>
   </div>
+  <Modal title="ModelType變更" close-text="取消變更" size="">
+    <div>checkBox</div>
+  </Modal>
+  <Alert ref="alert" />
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
-import ParamsPanel from "../parts/ParamsPanel.vue";
-import SwitchBox from "../parts/SwitchBox.vue";
+import { reactive, ref, getCurrentInstance, provide } from "vue";
+import ParamsPanel from "@parts/ParamsPanel.vue";
+import SwitchBox from "@parts/SwitchBox.vue";
+import Modal from "@parts/Modal.vue";
+import Alert from "@parts/Alert.vue";
+import SettingRecord from "@parts/SettingRecord.vue";
 import { useStore } from "vuex";
-import { usePermission } from "../../hook/usePermission";
-import { useFetch } from "../../hook/useFetch";
+import { usePermission } from "@hook/usePermission";
+import { useFetch } from "@hook/useFetch";
+import { useCheckID } from "@hook/useCheckID";
+const globalData = getCurrentInstance()?.appContext.config.globalProperties;
+const $cookies = globalData?.$cookies;
+const cookies = $cookies.get("JSESSIONID");
 const { state } = useStore();
 const { buttonList } = usePermission(state.data["ModifyPermissions"]);
 const paramsPanel = ref();
+const alert = ref();
+const saveValue = ref(false);
 const inputData = reactive({
   ProjectID: "請選擇專案代碼",
   STID: "",
 });
-const queryValue = () => paramsPanel.value?.queryValue();
-const submit = () => {
-  console.log(paramsPanel.value?.IotData);
+const inspectQuery = () => {
+  const { ProjectID: pjid, STID: stid } = inputData;
+  let isPass = false;
+  if (!pjid || !stid) {
+    alert.value?.notify({
+      color: "alert-danger",
+      i: "warning",
+      text: "STID、Project ID不得為空",
+    });
+  } else {
+    const { result, warnStr } = useCheckID(pjid, stid);
+    if (result === false) {
+      alert.value?.notify({
+        color: "alert-warning",
+        i: "gpp_bad",
+        text: `${pjid}的STID開頭必須為${warnStr} !!`,
+      });
+    } else {
+      alert.value?.notify({
+        color: "alert-success",
+        text: "STID查詢成功",
+        i: "task_alt",
+      });
+      isPass = true;
+    }
+  }
+  return {
+    isPass,
+  };
 };
+provide("inspectQuery", inspectQuery);
+const queryValue = () => paramsPanel.value?.queryValue();
 </script>
 
 <style lang="scss" scoped>

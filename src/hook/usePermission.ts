@@ -8,35 +8,41 @@ export const usePermission = (permission: number) => {
         switch: true,
         minorPanel: [],
         buttonList: [[
-            { id: "#ZeroSpanParams", text: "Zero Span參數" },
+            { id: "#ZeroSpanParams", text: "Zero Span參數", toggle: "collapse" },
             {
                 id: "#WifiSetting",
                 text: "Wifi設定",
+                toggle: "collapse"
             },
             {
                 id: "#BigSetting",
                 text: "重要設定",
+                toggle: "collapse"
             },
             {
                 id: "#InfoSetting",
                 text: "站台資訊設定",
+                toggle: "collapse"
             },
             {
-                id: "#ModelType",
+                id: "#Modal",
                 text: "ModelType變更",
+                toggle: "modal"
             },
         ]]
     })
     if (permission >= 5) {
         permissionView.buttonList = [[
-            { id: "#ZeroSpanParams", text: "Zero Span參數" },
+            { id: "#ZeroSpanParams", text: "Zero Span參數", toggle: "collapse" },
             {
                 id: "#WifiSetting",
                 text: "Wifi設定",
+                toggle: "collapse"
             },
             {
                 id: "#BigSetting",
                 text: "重要設定",
+                toggle: "collapse"
             },
         ]]
     }
