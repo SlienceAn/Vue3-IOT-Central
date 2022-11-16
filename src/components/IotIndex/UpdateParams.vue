@@ -76,9 +76,6 @@
       </template>
     </ParamsPanel>
   </div>
-  <Modal title="ModelType變更" close-text="取消變更" size="">
-    <div>checkBox</div>
-  </Modal>
   <Alert ref="alert" />
 </template>
 
@@ -86,7 +83,6 @@
 import { reactive, ref, getCurrentInstance, provide } from "vue";
 import ParamsPanel from "@parts/ParamsPanel.vue";
 import SwitchBox from "@parts/SwitchBox.vue";
-import Modal from "@parts/Modal.vue";
 import Alert from "@parts/Alert.vue";
 import SettingRecord from "@parts/SettingRecord.vue";
 import { useStore } from "vuex";
@@ -102,10 +98,10 @@ const paramsPanel = ref();
 const alert = ref();
 const saveValue = ref(false);
 const inputData = reactive({
-  ProjectID: "請選擇專案代碼",
+  ProjectID: "",
   STID: "",
 });
-const inspectQuery = () => {
+const inspectQuery = (): boolean => {
   const { ProjectID: pjid, STID: stid } = inputData;
   let isPass = false;
   if (!pjid || !stid) {
@@ -131,9 +127,7 @@ const inspectQuery = () => {
       isPass = true;
     }
   }
-  return {
-    isPass,
-  };
+  return isPass;
 };
 provide("inspectQuery", inspectQuery);
 const queryValue = () => paramsPanel.value?.queryValue();

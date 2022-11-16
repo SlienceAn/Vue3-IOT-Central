@@ -1,5 +1,5 @@
 <template>
-  <div class="row p-0 m-0">
+  <div class="row p-0 m-0 gy-2">
     <div
       v-for="item in minorData"
       :key="item.title"
@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-  <div class="row p-0 m-0">
+  <div class="row p-0 m-0 gy-2">
     <div class="col-lg-4 col-md-4 p-0">
       <PanelWrapper
         title="強制上傳中"

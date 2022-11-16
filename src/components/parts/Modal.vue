@@ -10,7 +10,9 @@
       <div :class="`modal-dialog ${size}`">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
+            <h5 class="modal-title" id="exampleModalLabel">
+              <strong>{{ title }}</strong>
+            </h5>
             <button
               type="button"
               class="btn-close"

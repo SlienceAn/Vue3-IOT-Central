@@ -80,7 +80,7 @@ import SwitchBox from "./SwitchBox.vue";
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const cookies = $cookies.get("JSESSIONID");
-const IQ = inject("inspectQuery") as any;
+const IQ: any = inject("inspectQuery");
 const props = defineProps({
   pjid: String,
   stid: String,
@@ -106,7 +106,7 @@ const IotData = reactive({
   },
 }) as any;
 const queryValue = () => {
-  if (IQ().isPass) {
+  if (IQ()) {
     const getValue = useFetch(
       `sensor/value/${props.stid}/${props.pjid}`,
       { method: "GET" },
