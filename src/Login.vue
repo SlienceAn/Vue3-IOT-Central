@@ -49,8 +49,8 @@ const store = useStore();
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const User = reactive({
-  UID: process.env.NODE_ENV === "development" ? "test" : "",
-  UPW: process.env.NODE_ENV === "development" ? "123" : "",
+  UID: process.env.NODE_ENV === "development" ? "99049" : "",
+  UPW: process.env.NODE_ENV === "development" ? "eckitout" : "",
 });
 const projectCode = reactive<Code[]>([]);
 onMounted(async () => {

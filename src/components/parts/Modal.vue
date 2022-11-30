@@ -1,24 +1,17 @@
 <template>
   <teleport to="body">
-    <div
-      class="modal fade"
-      id="Modal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
+    <div class="modal fade" id="Modal" ref="modalRef">
       <div :class="`modal-dialog ${size}`">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
+            <h5 class="modal-title">
               <strong>{{ title }}</strong>
             </h5>
             <button
-              type="button"
               class="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-            ></button>
+            />
           </div>
           <div class="modal-body">
             <slot></slot>
@@ -42,10 +35,22 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
+import { defineProps, defineExpose, ref, onMounted } from "vue";
+import { Modal } from "bootstrap";
 const props = defineProps({
   title: String,
   closeText: String,
   size: String,
+});
+const modalRef = ref(null);
+let modal: any;
+onMounted(() => {
+  modal = new Modal(modalRef.value, {});
+});
+const show = () => {
+  modal.show();
+};
+defineExpose({
+  show,
 });
 </script>

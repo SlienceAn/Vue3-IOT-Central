@@ -1,5 +1,5 @@
 <template>
-  <div class="row m-0">
+  <div class="row m-0" style="min-height: 100vh">
     <div class="sidebar p-0">
       <div v-if="isOpen" class="p-4">
         <strong> JSENE 捷思微感資訊中心</strong>

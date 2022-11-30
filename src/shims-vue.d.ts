@@ -5,3 +5,4 @@ declare module '*.vue' {
   export default component
 }
 declare module "sha1";
+declare module "bootstrap"
