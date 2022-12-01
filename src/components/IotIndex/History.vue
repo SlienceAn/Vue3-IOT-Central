@@ -19,11 +19,13 @@
     <DateForm
       date-class="col-md-3 col-sm-12"
       placeholder="選擇起始日期"
+      format="yyyy-MM-dd HH:mm"
       ref="StartDate"
     />
     <DateForm
       date-class="col-md-3 col-sm-12"
       placeholder="選擇結束日期"
+      format="yyyy-MM-dd HH:mm"
       ref="EndDate"
     />
     <div class="col-md-4 col-sm-12 d-flex">
@@ -116,7 +118,6 @@ const queryHistory = async (): Promise<void> => {
   const { pjid, stid, eventType } = searchForm;
   searchForm.startDate = StartDate.value.date;
   searchForm.endDate = EndDate.value.date;
-  console.log(searchForm);
   const url = `history/${eventType}/${pjid}?date=${searchForm.startDate}~${searchForm.endDate}`;
   const { result, warnStr } = useCheckID(searchForm.pjid, searchForm.stid);
   const getHistory = await useFetch(url, { method: "GET" }, cookies)();

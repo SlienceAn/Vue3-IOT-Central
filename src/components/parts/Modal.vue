@@ -50,7 +50,11 @@ onMounted(() => {
 const show = () => {
   modal.show();
 };
+const hide = () => {
+  modal.hide();
+};
 defineExpose({
   show,
+  hide,
 });
 </script>

@@ -11,7 +11,8 @@ interface config {
     body?: string
 }
 const baseUrl: string = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://www.jsene.com/iotcentral'
-export const useFetch = (url: string, config: config, headers = "") => {
+
+export const useFetch = (url: string, config: config, headers = "", response = "json") => {
     const state = reactive({
         loading: false,
         error: false,
@@ -31,7 +32,11 @@ export const useFetch = (url: string, config: config, headers = "") => {
         )
             .then(type => {
                 state.status = type.status
-                return type.json()
+                if (response === "blob") {
+                    return type.blob()
+                } else {
+                    return type.json()
+                }
             })
             .then(res => {
                 state.data = res

@@ -6,6 +6,7 @@ import UpdateParams from '../components/IotIndex/UpdateParams.vue';
 import History from '../components/IotIndex/History.vue';
 import ReportExcel from '../components/IotIndex/ReportExcel.vue';
 import IotHealth from '../components/IotIndex/IotHealth.vue';
+import MaintainImgDownload from '../components/IotIndex/MaintainImgDownload.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -50,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/IotHealth',
         name: '健康度分析',
         component: IotHealth
+      },
+      {
+        path: '/MaintainImgDownload',
+        name: '下載巡檢維護照片',
+        component: MaintainImgDownload
       }
     ]
   },

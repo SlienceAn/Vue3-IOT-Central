@@ -1,5 +1,6 @@
 <template>
-  <div class="row p-0 m-0 gy-2">
+  <Loading v-if="loading" />
+  <div v-else class="row p-0 m-0 gy-2">
     <div
       v-for="item in minorData"
       :key="item.title"
@@ -30,7 +31,7 @@
       </div>
     </div>
   </div>
-  <div class="row p-0 m-0 gy-2">
+  <div v-if="!loading" class="row p-0 m-0 gy-2">
     <div class="col-lg-4 col-md-4 p-0">
       <PanelWrapper
         title="強制上傳中"
@@ -57,18 +58,21 @@
     </div>
   </div>
   <PanelWrapper
+    v-if="!loading"
     title="斷線中"
     bg="bg-danger"
     :col="['STID', 'IIT', 'Desc', '斷線時間', '斷線累積時數']"
     :list="gatherList.offline"
   />
   <PanelWrapper
+    v-if="!loading"
     title="定值中"
     bg="bg-success"
     :col="['STID', 'IIT', 'Desc', '測項', '定值時間', '定值累積時數']"
     :list="gatherList.equal"
   />
   <PanelWrapper
+    v-if="!loading"
     title="零值(負值)中"
     bg="bg-warning"
     :col="['STID', 'IIT', 'Desc', '測項', '零項時間', '零值累積時數']"
@@ -81,18 +85,21 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
+  ref,
   defineProps,
   watch,
 } from "vue";
-import PanelWrapper from "../parts/PanelWrapper.vue";
+import PanelWrapper from "@parts/PanelWrapper.vue";
 import { useFetch } from "../../hook/useFetch";
 import { minorData as MD } from "../../store";
 import { useRouter } from "vue-router";
+import Loading from "@parts/Loading.vue";
 const globalData = getCurrentInstance()?.appContext.config.globalProperties;
 const $cookies = globalData?.$cookies;
 const cookies = $cookies.get("JSESSIONID");
 const router = useRouter();
 const minorData = reactive(MD);
+let loading = ref(true);
 const gatherList = reactive({
   negative: [],
   offline: [],
@@ -115,6 +122,7 @@ watch(
   }
 );
 const queryData = (value: any) => {
+  loading.value = true;
   const promiseList = ["switch", "offline", "alllost", "negative", "equal"];
   const promiseListExe = promiseList.map((url) => {
     return useFetch(`${url}/${value}`, { method: "GET" }, cookies)();
@@ -135,6 +143,7 @@ const queryData = (value: any) => {
       gatherList.offline = offlineData["Offline"];
       gatherList.lost = lostData;
       gatherList.equal = equalData;
+      loading.value = false;
     })
     .catch((err) => console.log(err));
 };

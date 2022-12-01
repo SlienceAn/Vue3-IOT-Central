@@ -6,6 +6,7 @@
       :format="format"
       autoApply
       utc="preserve"
+      :monthPicker="month"
     />
   </div>
 </template>
@@ -15,9 +16,14 @@ import { ref, defineProps, defineExpose } from "vue";
 const props = defineProps({
   dateClass: String,
   placeholder: String,
+  format: String,
+  month: {
+    type: Boolean,
+    default: false,
+    require: false,
+  },
 });
 const date = ref();
-const format = ref("yyyy-MM-dd HH:mm");
 defineExpose({
   date,
 });

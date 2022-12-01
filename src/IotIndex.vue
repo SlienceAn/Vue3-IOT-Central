@@ -18,14 +18,19 @@
           :key="R.urls"
           :to="R.urls"
           custom
-          v-slot="{ navigate }"
+          v-slot="{ navigate, isExactActive }"
         >
           <li
             @click="navigate"
-            class="list-group-item d-flex align-items-center gap-4 router-li"
+            :class="
+              isExactActive
+                ? 'list-group-item d-flex align-items-center gap-4 router-li active'
+                : 'list-group-item d-flex align-items-center gap-4 router-li'
+            "
           >
             <i class="material-icons">{{ R.i }}</i>
             <span>{{ R.text }}</span>
+            <div v-if="isExactActive" class="triangle"></div>
           </li>
         </router-link>
         <li class="list-group-item d-flex align-items-center gap-4 router-li">
@@ -130,15 +135,27 @@ const open = () => {
   border-right: 0;
 }
 .router-li {
+  position: relative;
   color: #007bff;
   padding: 15px 35px;
   border-right: 0px;
   &:hover {
     cursor: pointer;
-    color: #094483;
+    font-weight: bolder;
   }
 }
-
+.active {
+  background: #007bff !important;
+}
+.triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: -15px;
+  border-top: 28px solid transparent;
+  border-bottom: 28px solid transparent;
+  border-left: 15px solid #007bff;
+}
 nav {
   border-bottom: 0.5px solid;
   padding: 17px 0px 17px 0;
@@ -152,17 +169,17 @@ ul {
   font-size: 12px;
   font-weight: bolder;
 }
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
+// .slide-fade-enter-active {
+//   transition: all 0.3s ease-out;
+// }
 
-.slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
+// .slide-fade-leave-active {
+//   transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+// }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
+// .slide-fade-enter-from,
+// .slide-fade-leave-to {
+//   transform: translateX(20px);
+//   opacity: 0;
+// }
 </style>

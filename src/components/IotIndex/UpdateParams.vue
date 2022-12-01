@@ -3,7 +3,7 @@
     <div class="row p-0 m-0">
       <label class="col-md-2 col-sm-12">
         <div class="mb-2"><strong>Project ID</strong></div>
-        <select class="form-control" v-model="inputData.ProjectID">
+        <select class="form-select" v-model="inputData.ProjectID">
           <option disabled selected>請選擇專案代碼</option>
           <option v-for="pj in state.projectCode" :key="pj.id" :value="pj.id">
             {{ pj.id }} {{ pj.name }}
