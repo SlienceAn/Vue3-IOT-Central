@@ -14,7 +14,7 @@ export const usePermission = (permission: number) => {
                 text: "Wifi設定",
                 toggle: "collapse"
             },
-            {
+            {   
                 id: "#BigSetting",
                 text: "重要設定",
                 toggle: "collapse"
